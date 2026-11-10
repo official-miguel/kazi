@@ -20,7 +20,9 @@ export async function proxy(request: NextRequest) {
   });
 
   // Refreshes the token if it has expired. Do not remove.
-  await supabase.auth.getUser();
+  // getClaims checks the token locally where it can, so most requests
+  // do not need a round trip to Supabase.
+  await supabase.auth.getClaims();
 
   return response;
 }
