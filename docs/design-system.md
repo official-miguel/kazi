@@ -1,8 +1,8 @@
-# Kazi design system
+# Kazi Link design system
 
 The tokens live in one place: [`src/app/globals.css`](../src/app/globals.css). Run the app and open `/design-system` to see everything rendered.
 
-"Kazi" is a working name. It is set once in [`src/lib/brand.ts`](../src/lib/brand.ts).
+The product name, "Kazi Link", is set once in [`src/lib/brand.ts`](../src/lib/brand.ts).
 
 ## Rules of thumb
 

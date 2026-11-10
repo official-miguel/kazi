@@ -19,15 +19,11 @@ export default async function SignInPage() {
           {brand.name}
         </Link>
         <h1 className="text-title-lg">Sign in or join</h1>
-        <p className="text-ink-muted">Use your phone number. No password to remember.</p>
+        <p className="text-ink-muted">All you need is your phone number and a PIN.</p>
       </header>
       <Card>
         <SignInForm />
       </Card>
-      <p className="rounded-lg bg-amber-soft px-4 py-3 text-body-sm text-ink">
-        <span className="text-label">{brand.promise}</span> If anyone asks for a fee to give you work, do not pay.
-        Report the post.
-      </p>
     </main>
   );
 }

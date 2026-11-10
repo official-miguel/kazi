@@ -38,7 +38,7 @@ const typeStyles: Array<{ name: string; className: string; sample: string }> = [
   { name: "title-lg · 24/32 · 700", className: "text-title-lg", sample: "Jobs near Nakuru" },
   { name: "title-md · 20/28 · 700", className: "text-title-md", sample: "Electrician, wiring and solar" },
   { name: "title-sm · 17/24 · 600", className: "text-title-sm", sample: "ICT support attachment" },
-  { name: "body · 16/24 · 400", className: "text-body", sample: "Apply in one tap. You never pay to get a job." },
+  { name: "body · 16/24 · 400", className: "text-body", sample: "Find work near you and apply in one tap." },
   { name: "body-sm · 14/20 · 400", className: "text-body-sm", sample: "Nakuru Town, Nakuru · Closes 28 Nov" },
   { name: "label · 14/20 · 600", className: "text-label", sample: "Apply now" },
   { name: "caption · 12/16 · 600", className: "text-caption uppercase", sample: "Verified employer" },

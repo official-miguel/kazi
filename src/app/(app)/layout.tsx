@@ -25,6 +25,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             {brand.name}
           </Link>
           <div className="flex min-w-0 items-center gap-3">
+            {ctx.account?.is_admin && (
+              <Link href="/admin" className="text-label text-primary">
+                Admin
+              </Link>
+            )}
             <RoleBadge role={profile.type} verified={profile.verification_status === "verified"} size={32} />
             <span className="hidden truncate text-label sm:block">{profile.full_name}</span>
             <form action={signOutAction}>

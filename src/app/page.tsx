@@ -14,7 +14,6 @@ export default function HomePage() {
       </div>
       <h1 className="max-w-[18ch] text-display">{brand.name}</h1>
       <p className="max-w-[40ch] text-title-sm font-normal text-ink-muted">{brand.tagline}</p>
-      <p className="self-start rounded-pill bg-amber-soft px-4 py-2 text-label text-amber-ink">{brand.promise}</p>
       <div className="flex flex-wrap gap-3">
         <Link href="/sign-in" className={buttonClasses("primary")}>
           Get started
