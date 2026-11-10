@@ -116,7 +116,23 @@ export async function signInAction(prev: SignInState, formData: FormData): Promi
   }
 
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInWithPassword({ email: login, password: pin });
+  let { data, error } = await supabase.auth.signInWithPassword({ email: login, password: pin });
+
+  // An admin number that joined before auto-activation existed is still
+  // "waiting". Supabase only reports "not confirmed" when the PIN was correct,
+  // so it is safe to activate the account here and sign in again.
+  if (error && error.message.toLowerCase().includes("not confirmed") && isAdminPhone(phone)) {
+    const admin = createAdminClient();
+    const { data: account } = admin
+      ? await admin.from("accounts").select("id").eq("email", login).maybeSingle()
+      : { data: null };
+    if (admin && account) {
+      await admin.auth.admin.updateUserById(account.id, { email_confirm: true });
+      await admin.from("accounts").update({ phone: phone.replace(/\D/g, ""), is_admin: true }).eq("id", account.id);
+      ({ data, error } = await supabase.auth.signInWithPassword({ email: login, password: pin }));
+    }
+  }
+
   if (error || !data.user) {
     const m = (error?.message ?? "").toLowerCase();
     if (m.includes("not confirmed")) {
