@@ -65,6 +65,11 @@ export function SignInForm() {
         hint={joining ? "At least 6 numbers or letters. You will use it every time you sign in." : undefined}
         required
       />
+      {state.notice && (
+        <p className="rounded-lg bg-primary-soft px-4 py-3 text-body-sm text-ink" role="status">
+          {state.notice}
+        </p>
+      )}
       <ErrorNote message={state.error} />
       <Button type="submit" fullWidth disabled={pending}>
         {pending ? "One moment…" : joining ? "Create account" : "Sign in"}

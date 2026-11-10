@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { isAdminPhone } from "@/lib/admins";
 import { normaliseKenyanPhone, phoneToLogin } from "@/lib/phone";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -52,10 +53,14 @@ export async function signInAction(prev: SignInState, formData: FormData): Promi
       return { view, phone: "", error: "Joining is not switched on yet. Please try again later. (Ref: no key)" };
     }
 
+    // Admin numbers (see lib/admins.ts) are activated at once.
+    // Everyone else stays locked until an admin confirms the number.
+    const isAdmin = isAdminPhone(phone);
+
     const { data, error } = await admin.auth.admin.createUser({
       email: login,
       password: pin,
-      email_confirm: false, // stays locked until an admin confirms the number
+      email_confirm: isAdmin,
       user_metadata: { phone },
     });
 
@@ -89,7 +94,23 @@ export async function signInAction(prev: SignInState, formData: FormData): Promi
 
     // Save the phone number on the account, so employers can call shortlisted
     // applicants and admins can find people by number. Stored without the "+".
-    await admin.from("accounts").update({ phone: phone.replace(/\D/g, "") }).eq("id", data.user.id);
+    const { error: accountError } = await admin
+      .from("accounts")
+      .update({ phone: phone.replace(/\D/g, ""), ...(isAdmin ? { is_admin: true } : {}) })
+      .eq("id", data.user.id);
+    if (accountError) {
+      console.error("[join] account update failed", { code: accountError.code, message: accountError.message });
+    }
+
+    if (isAdmin) {
+      // Sign the new admin in straight away and send them to set up a profile.
+      const supabase = await createClient();
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email: login, password: pin });
+      if (signInError) {
+        return { view: "signin", phone: "", notice: "Your account is ready. Sign in with your number and PIN." };
+      }
+      redirect("/onboarding");
+    }
 
     return { view: "waiting", phone, notice: "Your account is created." };
   }
