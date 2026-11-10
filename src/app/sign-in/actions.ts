@@ -109,7 +109,7 @@ export async function signInAction(prev: SignInState, formData: FormData): Promi
       if (signInError) {
         return { view: "signin", phone: "", notice: "Your account is ready. Sign in with your number and PIN." };
       }
-      redirect("/onboarding");
+      redirect("/admin");
     }
 
     return { view: "waiting", phone, notice: "Your account is created." };
@@ -148,6 +148,10 @@ export async function signInAction(prev: SignInState, formData: FormData): Promi
       error: `We could not sign you in. Please try again. (Ref: ${error?.code ?? error?.status ?? "unknown"})`,
     };
   }
+
+  // Admins go straight to the admin portal.
+  const { data: account } = await supabase.from("accounts").select("is_admin").eq("id", data.user.id).maybeSingle();
+  if (account?.is_admin) redirect("/admin");
 
   const { count } = await supabase
     .from("profiles")

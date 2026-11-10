@@ -10,6 +10,7 @@ export const metadata: Metadata = { title: "Sign in" };
 
 export default async function SignInPage() {
   const ctx = await getSessionContext();
+  if (ctx?.account?.is_admin) redirect("/admin");
   if (ctx) redirect(ctx.profiles.length > 0 ? "/home" : "/onboarding");
 
   return (
