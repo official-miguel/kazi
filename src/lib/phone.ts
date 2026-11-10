@@ -11,6 +11,25 @@ export function normaliseKenyanPhone(input: string): string | null {
   return `+254${digits}`;
 }
 
+/*
+ * Sign-in runs on Supabase's email + password login, so it does not depend on
+ * an SMS provider. Each phone number gets a hidden login address that people
+ * never see. The ".invalid" ending is reserved: it can never be registered or
+ * receive mail, so nobody can intercept anything sent to it.
+ */
+const LOGIN_DOMAIN = "phone.kazilink.invalid";
+
+/** +254712345678 -> 254712345678@phone.kazilink.invalid */
+export function phoneToLogin(e164: string): string {
+  return `${e164.replace(/\D/g, "")}@${LOGIN_DOMAIN}`;
+}
+
+/** 254712345678@phone.kazilink.invalid -> +254712345678, or null for any other address. */
+export function loginToPhone(login: string | null | undefined): string | null {
+  if (!login || !login.endsWith(`@${LOGIN_DOMAIN}`)) return null;
+  return `+${login.slice(0, login.indexOf("@"))}`;
+}
+
 /** +254712345678 -> 0712 345 678 */
 export function formatKenyanPhone(e164: string): string {
   const digits = e164.replace(/\D/g, "").replace(/^254/, "");

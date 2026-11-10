@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getSessionContext } from "@/lib/auth";
+import { loginToPhone } from "@/lib/phone";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 /** Only signed-in admins get the full-rights client. Everyone else gets null. */
@@ -16,7 +17,7 @@ export async function confirmPhoneAction(formData: FormData) {
   const admin = await adminOnly();
   const userId = String(formData.get("user_id") ?? "");
   if (!admin || !userId) return;
-  await admin.auth.admin.updateUserById(userId, { phone_confirm: true });
+  await admin.auth.admin.updateUserById(userId, { email_confirm: true });
   revalidatePath("/admin");
 }
 
@@ -26,9 +27,9 @@ export async function rejectSignUpAction(formData: FormData) {
   const userId = String(formData.get("user_id") ?? "");
   if (!admin || !userId) return;
 
-  // Safety: only ever delete accounts whose number is still unconfirmed.
+  // Safety: only ever delete phone sign-ups that are still unconfirmed.
   const { data } = await admin.auth.admin.getUserById(userId);
-  if (!data.user || data.user.phone_confirmed_at) return;
+  if (!data.user || data.user.email_confirmed_at || !loginToPhone(data.user.email)) return;
 
   await admin.auth.admin.deleteUser(userId);
   revalidatePath("/admin");

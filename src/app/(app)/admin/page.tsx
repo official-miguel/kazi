@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { getSessionContext } from "@/lib/auth";
 import { formatShortDate } from "@/lib/format";
-import { formatKenyanPhone } from "@/lib/phone";
+import { formatKenyanPhone, loginToPhone } from "@/lib/phone";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { confirmPhoneAction, rejectSignUpAction } from "./actions";
 
@@ -29,7 +29,8 @@ export default async function AdminPage() {
 
   const { data, error } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
   const waiting = (data?.users ?? [])
-    .filter((u) => u.phone && !u.phone_confirmed_at)
+    .map((u) => ({ id: u.id, created_at: u.created_at, confirmed: Boolean(u.email_confirmed_at), phone: loginToPhone(u.email) }))
+    .filter((u): u is typeof u & { phone: string } => u.phone !== null && !u.confirmed)
     .sort((a, b) => a.created_at.localeCompare(b.created_at));
 
   return (
@@ -65,7 +66,7 @@ export default async function AdminPage() {
             <li key={u.id}>
               <Card className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-title-sm tabular-nums">{formatKenyanPhone(u.phone!)}</p>
+                  <p className="text-title-sm tabular-nums">{formatKenyanPhone(u.phone)}</p>
                   <p className="text-body-sm text-ink-muted">Joined {formatShortDate(u.created_at.slice(0, 10))}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
