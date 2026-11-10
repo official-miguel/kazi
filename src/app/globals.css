@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+/*
+ * Kazi design tokens. This file is the single source of truth for the app.
+ * It mirrors the published design system (see docs/design-system.md).
+ * Spacing uses Tailwind's 4px step, so p-4 = 16px = space-4.
+ */
+@theme {
+  /* Colour: only these exist. No default Tailwind palette, no blue. */
+  --color-*: initial;
+  --color-bg: #faf6ec;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f1ecdf;
+  --color-ink: #1f2421;
+  --color-ink-muted: #5a635d;
+  --color-line: #e4dece;
+  --color-control: #7d877f;
+  --color-primary: #0f5c3f;
+  --color-primary-strong: #0a4530;
+  --color-primary-soft: #e3f1e8;
+  --color-on-primary: #ffffff;
+  --color-sprout: #2f9e5b;
+  --color-sprout-ink: #1d7a43;
+  --color-amber: #f5a524;
+  --color-amber-ink: #8a5200;
+  --color-amber-soft: #fdf0d3;
+  --color-danger: #b3261e;
+  --color-danger-soft: #fbe9e7;
+
+  /* Type scale */
+  --text-display: 32px;
+  --text-display--line-height: 40px;
+  --text-display--font-weight: 800;
+  --text-display--letter-spacing: -0.02em;
+  --text-title-lg: 24px;
+  --text-title-lg--line-height: 32px;
+  --text-title-lg--font-weight: 700;
+  --text-title-lg--letter-spacing: -0.01em;
+  --text-title-md: 20px;
+  --text-title-md--line-height: 28px;
+  --text-title-md--font-weight: 700;
+  --text-title-sm: 17px;
+  --text-title-sm--line-height: 24px;
+  --text-title-sm--font-weight: 600;
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
+  --text-label: 14px;
+  --text-label--line-height: 20px;
+  --text-label--font-weight: 600;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption--font-weight: 600;
+  --text-caption--letter-spacing: 0.02em;
+
+  /* Shape */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(31, 36, 33, 0.06);
+  --shadow-md: 0 6px 20px rgba(31, 36, 33, 0.1);
+
+  /* Layout */
+  --container-content: 1128px;
+}
+
+@theme inline {
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
